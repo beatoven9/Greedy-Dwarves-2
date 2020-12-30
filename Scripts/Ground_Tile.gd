@@ -1,25 +1,22 @@
 extends KinematicBody2D
 
-signal off_screen
+signal off_screen(destroyed_obj)
 
-var velocity = Vector2(0,0)
+export var velocity = -200
+var vel_multiplier = 0
+var halfwidth 
 
 func _ready():
-	#self.connect("off_screen", get_owner(), "place_tilemap")
-	#print(get_owner())
-	pass
+	halfwidth = $CollisionShape2D.shape.extents.x
 	
 var time = 0
 func _process(delta):
-	velocity.x = -300 
-	#if global_position.x <= -100:
-		#emit_signal("off_screen")
+	
+	if global_position.x <= -1000:
+		emit_signal("off_screen", self)
 	time+=delta
 	if time >= 1:
-		print("signal emitted")
-		temp_signal()
+		#print(global_position.x)
 		time = 0
-	position += velocity * delta
+	position += velocity * Vector2(1,0) * vel_multiplier * delta
 
-func temp_signal():
-	emit_signal("off_screen")
