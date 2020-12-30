@@ -90,4 +90,5 @@ anims/Jump = SubResource( 38 )
 anims/Run = SubResource( 39 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
+offset = Vector2( 150, -50 )
 zoom = Vector2( 0.5, 0.5 )

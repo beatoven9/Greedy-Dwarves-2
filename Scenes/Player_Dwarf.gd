@@ -10,7 +10,6 @@ var velocity = Vector2()
 export var gravity = 8
 
 func _ready():
-	$AnimationPlayer.play("Run")
 	$Camera2D.make_current()
 
 func _physics_process(delta):
