@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/Midground_Mountain_1.png" type="Texture" id=1]
+
+[node name="Fore_Mountain_A" type="Sprite"]
+texture = ExtResource( 1 )
+centered = false
+offset = Vector2( -241.909, -242.3 )

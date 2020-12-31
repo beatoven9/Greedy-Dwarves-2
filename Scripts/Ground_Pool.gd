@@ -2,17 +2,20 @@ extends Node2D
 
 export var dir_path = "res://Scenes/Ground_Parts/"
 
-var obj_pool: Array = []
+#var obj_pool: Array = []
 var obj_available: Array = []
 var obj_in_scene: Array = []
 
 var pool_position = Vector2(2000, 2000)
-var default_spawn_position = Vector2(500, 150)
+var default_spawn_position = Vector2(1000, 150)
 
 var horizontal_velocity: int
 export var horizontal_velocity_multiplier = 10
-export var plateau_gap_size = 50
-export var plateau_spawn_y = 150
+export var avg_plateau_gap_size = 90
+export var plateau_gap_range = 70
+
+export var avg_plateau_spawn_y = 150
+export var plateau_y_range = 50
 
 var rng = RandomNumberGenerator.new()
 
@@ -30,7 +33,7 @@ func _process(_delta):
 		
 
 func first_spawn():
-	for _i in range(1, 10):
+	for _i in range(1, 30):
 		place_plateau(select_rand_index())
 	
 	
@@ -58,14 +61,13 @@ func pool_objects(files, num_copies):
 			object.global_position = pool_position
 			if (object.connect("off_screen", self, "plateau_off_screen") != OK):
 				print("Error connecting signal from tilemap nodes")
-			obj_pool.append(object)
+#			obj_pool.append(object)
 			obj_available.append(object)
 			get_parent().call_deferred('add_child_below_node', self, object)
 
 
 #Called when signal is recieved from Ground_Tile.gd that a ground tile has gone off screen
 func plateau_off_screen(destroyed_obj):
-	print("Signal recieved")
 	move_to_pool(destroyed_obj)
 	place_plateau(select_rand_index())
 
@@ -81,19 +83,26 @@ func select_rand_index():
 	rng.randomize()
 	return rng.randi_range(0, len(obj_available)-1)
 
+func get_random_gap(gap_size, gap_range):
+	rng.randomize()
+	return rng.randf_range(gap_size - gap_range, gap_size + gap_range)
+
+func get_random_y_spawn(avg_y_pos, y_pos_range):
+	rng.randomize()
+	return rng.randf_range(avg_y_pos - y_pos_range, avg_y_pos + y_pos_range)
 
 func get_spawn_position(obj_to_spawn, gap_size):
 	if obj_in_scene.size() <= 0:
 		return default_spawn_position
 	else:
 		var previous_obj = obj_in_scene.back()
-		var dist_from_prev = (obj_to_spawn.halfwidth) + (previous_obj.halfwidth) + gap_size
-		return Vector2(dist_from_prev + previous_obj.global_position.x, plateau_spawn_y)
+		var dist_from_prev = (obj_to_spawn.halfwidth) + (previous_obj.halfwidth) + get_random_gap(gap_size, plateau_gap_range)
+		return Vector2(dist_from_prev + previous_obj.global_position.x, get_random_y_spawn(avg_plateau_spawn_y, plateau_y_range))
 		
 		
 func place_plateau(index_select): 
 	var object = obj_available[index_select]
-	object.global_position = get_spawn_position(object, plateau_gap_size)
+	object.global_position = get_spawn_position(object, avg_plateau_gap_size)
 	object.vel_multiplier = 1
 	obj_available.remove(index_select)
 	obj_in_scene.append(object)

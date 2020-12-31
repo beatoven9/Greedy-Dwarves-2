@@ -1,4 +1,5 @@
-extends KinematicBody2D
+extends Sprite
+
 
 signal off_screen(destroyed_obj)
 
@@ -7,7 +8,7 @@ var vel_multiplier = 0
 var halfwidth 
 
 func _ready():
-	halfwidth = $CollisionShape2D.shape.extents.x
+	halfwidth = self.region_rect.size.x/2
 	
 var time = 0
 func _process(delta):
