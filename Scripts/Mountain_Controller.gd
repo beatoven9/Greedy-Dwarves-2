@@ -16,11 +16,9 @@ var obj_copies = 10
 var default_spawn_position = Vector2(1000, 150)
 
 func _ready():
-	print("ready")
 	var files = files_in_directory(dir_path)
 	pool_objects(files, obj_copies)
 	yield(obj_available.back(), "ready")
-	print("about to spawn mountains")
 	first_spawn()
 
 func first_spawn():
@@ -51,12 +49,11 @@ func files_in_directory(path):
 func pool_objects(files, num_copies):
 	for file in files:
 		var resource = load(file)
-		print("loaded ", resource)
 		for i in num_copies:
 			var object: Sprite = resource.instance()
 			object.global_position = pool_position
-			if (object.connect("off_screen", self, "mountain_off_screen") != OK):
-				print("Error connecting signal from tilemap nodes")
+			if (object.connect("this_off_screen", self, "mountain_off_screen") != OK):
+				print("Error connecting signal from mountain nodes")
 			obj_available.append(object)
 			get_parent().call_deferred('add_child_below_node', self, object)
 
@@ -68,10 +65,9 @@ func get_random_gap(gap_size, gap_range):
 func place_mountain(index_select):
 	var object = obj_available[index_select]
 	object.global_position = get_spawn_position(object, avg_gap_size)
-	object.vel_multiplier = 1
+	#object.vel_multiplier = 1
 	obj_available.remove(index_select)
 	obj_in_scene.append(object)
-	print("Mountain placed")
 	
 
 func get_spawn_position(obj_to_spawn, gap_size):

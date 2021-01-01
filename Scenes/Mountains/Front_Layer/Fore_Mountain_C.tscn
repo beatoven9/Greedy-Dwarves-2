@@ -1,8 +1,11 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Assets/Foreground_Mountain_3.png" type="Texture" id=1]
+[ext_resource path="res://Scripts/Mountain.gd" type="Script" id=2]
 
 [node name="Fore_Mountain_C" type="Sprite"]
+z_index = -1
 texture = ExtResource( 1 )
 centered = false
 offset = Vector2( -132.952, -223.991 )
+script = ExtResource( 2 )
