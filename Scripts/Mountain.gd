@@ -4,7 +4,7 @@ extends Sprite
 signal this_off_screen(destroyed_obj)
 
 export var velocity = -100
-var vel_multiplier = 1
+var vel_multiplier = 0
 var halfwidth 
 
 func _ready():

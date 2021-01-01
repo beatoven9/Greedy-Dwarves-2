@@ -11,19 +11,23 @@ export var mountain_gap_range = 100
 
 var rng = RandomNumberGenerator.new()
 
-var obj_copies = 10
+var obj_copies = 30
 
 var default_spawn_position = Vector2(1000, 150)
 
 func _ready():
+
+	
 	var files = files_in_directory(dir_path)
 	pool_objects(files, obj_copies)
 	yield(obj_available.back(), "ready")
 	first_spawn()
+	print(obj_in_scene)
 
 func first_spawn():
 	for _i in range(1, 30):
 		place_mountain(select_rand_index())
+	#print("first spawn over")
 	
 func select_rand_index():
 	rng.randomize()
@@ -65,9 +69,10 @@ func get_random_gap(gap_size, gap_range):
 func place_mountain(index_select):
 	var object = obj_available[index_select]
 	object.global_position = get_spawn_position(object, avg_gap_size)
-	#object.vel_multiplier = 1
+	object.vel_multiplier = 1
 	obj_available.remove(index_select)
 	obj_in_scene.append(object)
+	#print("mountain placed")
 	
 
 func get_spawn_position(obj_to_spawn, gap_size):
@@ -81,6 +86,7 @@ func get_spawn_position(obj_to_spawn, gap_size):
 func mountain_off_screen(destroyed_obj):
 	move_to_pool(destroyed_obj)
 	place_mountain(select_rand_index())
+	#print("mountain off screen")
 
 
 func move_to_pool(destroyed_obj):

@@ -3,8 +3,6 @@ extends Node2D
 export var plateau_path = "res://Scenes/Ground_Parts/"
 export var platform_path = "res://Scenes/Platforms/"
 
-
-#var obj_pool: Array = []
 var plateaus_available: Array = []
 var plateaus_in_scene: Array = []
 
@@ -16,10 +14,10 @@ var default_spawn_position = Vector2(1000, 0)
 
 var horizontal_velocity: int
 export var horizontal_velocity_multiplier = 10
-export var avg_plateau_gap_size = 90
+export var avg_plateau_gap_size = 150
 export var plateau_gap_range = 70
 
-export var max_gap_without_platform = 200
+export var max_gap_without_platform = 150
 
 export var avg_plateau_spawn_y = 0
 export var plateau_y_range = 50
@@ -27,9 +25,13 @@ export var plateau_y_range = 50
 var rng = RandomNumberGenerator.new()
 
 var plateau_copies = 10
-var platform_copies = 20
+var platform_copies = 40
+
+var viewport_x = 0
 
 func _ready():
+	#viewport_x = get_viewport_rect().size
+	#print(viewport_x)
 	var plateau_files = files_in_directory(plateau_path)
 	pool_objects(plateau_files, plateau_copies, plateaus_available, true)
 	yield(plateaus_available.back(), "ready")
@@ -77,7 +79,6 @@ func pool_objects(files, num_copies, objs_available, is_plateau):
 			else:
 				if (object.connect("off_screen", self, "platform_off_screen") != OK):
 					print("Error connecting signal from tilemap nodes")
-#			obj_pool.append(object)
 			objs_available.append(object)
 			get_parent().call_deferred('add_child_below_node', self, object)
 
@@ -88,7 +89,6 @@ func plateau_off_screen(destroyed_obj):
 	place_plateau(select_rand_index())
 
 func platform_off_screen(destroyed_obj):
-	print("platform off screen")
 	move_to_pool(destroyed_obj, platforms_in_scene, platforms_available)
 
 
@@ -118,9 +118,12 @@ func get_spawn_position(obj_to_spawn, gap_size):
 		var previous_obj = plateaus_in_scene.back()
 		var dist_from_prev = (obj_to_spawn.halfwidth) + (previous_obj.halfwidth) + get_random_gap(gap_size, plateau_gap_range)
 		var spawn_location = Vector2(dist_from_prev + previous_obj.global_position.x, get_random_y_spawn(avg_plateau_spawn_y, plateau_y_range))
-		var plateau_distance = plateaus_in_scene.back().global_position.distance_to(spawn_location)
+		var inner_corner_previous = Vector2(previous_obj.global_position.x + previous_obj.halfwidth, previous_obj.global_position.y)
+		var inner_corner_current = Vector2( ( spawn_location.x - obj_to_spawn.halfwidth ), spawn_location.y)
+		var plateau_distance = inner_corner_previous.distance_to(inner_corner_current)
+
 		if plateau_distance > max_gap_without_platform: 
-			place_platform(previous_obj.global_position, spawn_location) 
+			place_platform(inner_corner_previous, inner_corner_current) 
 		return spawn_location
 		
 		
@@ -134,8 +137,6 @@ func place_plateau(index_select):
 
 func place_platform(prev_obj, next_obj):
 	var platform = platforms_available.pop_back() 
-	
-	### this formula is calculating distance between the centers of the platform but it should probably be calculating the distance between the two inside corners
 	var platform_pos = Vector2( ( ( ( next_obj.x - prev_obj.x ) / 2 ) + prev_obj.x), ( ( ( next_obj.y - prev_obj.y ) / 2 ) + prev_obj.y ) )
 	platform.global_position = platform_pos
 	platform.vel_multiplier = 1
