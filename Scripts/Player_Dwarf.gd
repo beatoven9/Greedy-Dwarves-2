@@ -5,6 +5,7 @@ export var fallMult = 5
 export var lowJumpMultiplier = 10
 export var jumpVelocity = 300 #Jump height
 
+
 var lock_position
 
 #Physics
@@ -33,5 +34,6 @@ func _physics_process(_delta):
 			velocity = Vector2.UP * jumpVelocity #Normal Jump action
 		else:
 			$AnimationPlayer.play("Run")
+
 
 	velocity = move_and_slide(velocity, Vector2(0,-1))  

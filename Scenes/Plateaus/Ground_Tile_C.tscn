@@ -1,12 +1,12 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Scripts/Ground_Tile.gd" type="Script" id=1]
-[ext_resource path="res://Assets/Ground_A.png" type="Texture" id=2]
+[ext_resource path="res://Scripts/Plateau.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Ground_C.png" type="Texture" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 79.3991, 151.163 )
+extents = Vector2( 31.9864, 152.42 )
 
-[node name="Ground_Tile_A" type="KinematicBody2D"]
+[node name="Ground_Tile_C" type="KinematicBody2D"]
 script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
