@@ -1,16 +1,38 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scenes/Level_Motor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Player_Dwarf.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/Ground_TileMap.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Pickups/Gem_Blue.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Starting_Platform.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Pickups/Gem_Purple.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/Pickups/Coin_Small.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/Pickups/Coin_Large.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Game_Manager.tscn" type="PackedScene" id=8]
 
 [node name="MainScene" type="Node2D"]
 
-[node name="TileMap" parent="." instance=ExtResource( 3 )]
-tile_data = PoolIntArray( 393180, 1, 0, 393181, 1, 0, 393182, 1, 0, 393183, 1, 0, 393184, 1, 0, 393185, 1, 0, 393186, 1, 0, 393187, 1, 0, 393188, 1, 0, 393189, 1, 0, 393190, 1, 0, 393191, 1, 0, 393192, 1, 0, 393193, 1, 0, 393194, 1, 0, 393195, 1, 0, 393196, 1, 0, 393197, 1, 0, 393198, 1, 0, 393199, 1, 0, 393200, 1, 0, 393201, 1, 0, 393202, 1, 0, 393203, 1, 0, 393204, 1, 0, 393205, 1, 0, 393206, 1, 0, 393207, 1, 0, 393208, 1, 0, 393209, 1, 0, 393210, 1, 0, 393211, 1, 0, 393212, 1, 0, 393213, 1, 0, 393214, 1, 0, 393215, 1, 0, 327680, 1, 0, 327681, 1, 0, 327682, 1, 0, 327683, 1, 0, 327684, 1, 0, 327685, 1, 0, 327686, 1, 0, 327687, 1, 0, 327688, 1, 0, 327689, 1, 0, 327690, 1, 0, 327691, 1, 0, 327692, 1, 0, 327693, 1, 0, 327694, 1, 0, 327695, 1, 0, 327696, 1, 0, 327697, 1, 0, 327698, 1, 0, 327699, 1, 0, 327700, 1, 0, 327701, 1, 0, 327702, 1, 0, 327703, 1, 0, 327704, 1, 0, 327705, 1, 0, 327706, 1, 0, 327707, 1, 0, 327708, 1, 0, 327709, 1, 0, 327710, 1, 0, 327711, 1, 0, 327712, 1, 0, 327713, 1, 0, 327714, 1, 0, 327715, 1, 0, 327716, 1, 0, 327717, 1, 0, 327718, 1, 0, 327719, 1, 0, 327720, 1, 0 )
-
 [node name="Player_Dwarf" parent="." instance=ExtResource( 2 )]
-position = Vector2( -1.00528, -65.5682 )
+position = Vector2( 0, -150 )
 
 [node name="Level_Motor" parent="." instance=ExtResource( 1 )]
 avg_plateau_spawn_y = 0
+
+[node name="Platform" parent="." instance=ExtResource( 4 )]
+position = Vector2( 0, -100 )
+
+[node name="Gem_Blue" parent="." instance=ExtResource( 3 )]
+position = Vector2( -7.78696, -180.472 )
+value = 10
+
+[node name="Gem_Purple" parent="." instance=ExtResource( 5 )]
+position = Vector2( 4.71937, -168.195 )
+
+[node name="Coin_Small" parent="." instance=ExtResource( 6 )]
+position = Vector2( -15.2971, -193.291 )
+value = 5
+
+[node name="Coin_Large" parent="." instance=ExtResource( 7 )]
+position = Vector2( 11.8393, -190.931 )
+value = 30
+
+[node name="Game_Manager" parent="." instance=ExtResource( 8 )]

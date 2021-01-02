@@ -58,11 +58,15 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
-[node name="Player_Dwarf" type="KinematicBody2D"]
+[node name="Player_Dwarf" type="KinematicBody2D" groups=[
+"Player",
+]]
 position = Vector2( 98.8414, 370.369 )
 script = ExtResource( 2 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=[
+"Player",
+]]
 position = Vector2( -2.508, 4.706 )
 shape = SubResource( 1 )
 

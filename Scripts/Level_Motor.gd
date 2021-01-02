@@ -101,10 +101,10 @@ func _process(_delta):
 
 func first_plateau_spawn():
 	for _i in range(1, 30):
-		place_plateau(select_rand_index(plateaus_available))
+		place_plateau()
 	
 func first_mount_spawn(x, type):
-	for i in range(1, x):
+	for _i in range(1, x):
 		place_mountain(type)
 	
 func files_in_directory(path):
@@ -150,11 +150,12 @@ func pool_objects(files, num_copies, objs_available, obj_type):
 			objs_available.append(object)
 			get_parent().call_deferred('add_child_below_node', self, object)
 
+
 ###
 ### off_screen functions
 func plateau_off_screen(destroyed_obj):
 	move_to_pool(destroyed_obj, plateaus_in_scene, plateaus_available)
-	place_plateau(select_rand_index(plateaus_available))
+	place_plateau()
 
 func platform_off_screen(destroyed_obj):
 	move_to_pool(destroyed_obj, platforms_in_scene, platforms_available)
@@ -174,7 +175,8 @@ func back_mount_off_screen(destroyed_obj):
 
 ####
 ### object placement functions
-func place_plateau(index_select): 
+func place_plateau():
+	var index_select = select_rand_index(plateaus_available)
 	var object = plateaus_available[index_select]
 	var spawn_location = get_plateau_spawn_position(object, avg_plateau_gap_size)
 	object.global_position = spawn_location

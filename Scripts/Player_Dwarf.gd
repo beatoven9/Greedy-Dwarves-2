@@ -5,7 +5,6 @@ export var fallMult = 5
 export var lowJumpMultiplier = 10
 export var jumpVelocity = 300 #Jump height
 
-
 var lock_position
 
 #Physics
@@ -19,6 +18,7 @@ func _ready():
 func _physics_process(_delta):
 	position.x = lock_position
 	#Applying gravity to player
+	
 	velocity.y += gravity 
 
 	#Jump Physics
