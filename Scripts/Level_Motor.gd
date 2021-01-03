@@ -3,6 +3,7 @@ extends Node2D
 #### paths to Scene Folders
 export var plateau_path = "res://Scenes/Plateaus/"
 export var platform_path = "res://Scenes/Platforms/"
+export var pickup_path = "res://Scenes/Pickups/"
 export var front_mount_path = "res://Scenes/Mountains/Front_Layer/"
 export var mid_mount_path = "res://Scenes/Mountains/Mid_Layer/"
 export var back_mount_path = "res://Scenes/Mountains/Back_Layer/"
@@ -23,6 +24,13 @@ var plateau_copies = 10
 var platforms_available: Array = []
 var platforms_in_scene: Array = []
 var platform_copies = 40
+
+	## PICKUPS
+var pickups_available: Array = []
+var pickups_in_scene: Array = []
+var pickup_copies = 10
+var pickup_default_x_pos = 900
+export var y_range = Vector2(0, 100)
 
 	## FRONT_MOUNTAINS
 var front_mounts_available: Array = []
@@ -65,10 +73,12 @@ var front_mount_vel = .9
 var mid_mount_vel = .7
 var back_mount_vel = .5
 
+### misc vars
+var first_jump = false
 var rng = RandomNumberGenerator.new()
+var time = 0
 
-
-enum {PLATEAU, PLATFORM, FRONT_MOUNT, MID_MOUNT, BACK_MOUNT}
+enum {PLATEAU, PLATFORM, PICKUP, FRONT_MOUNT, MID_MOUNT, BACK_MOUNT}
 
 func _ready():
 
@@ -81,6 +91,9 @@ func _ready():
 	yield(platforms_available.back(), "ready")
 	first_plateau_spawn()
 	
+	var pickup_files = files_in_directory(pickup_path)
+	pool_objects(pickup_files, pickup_copies, pickups_available, PICKUP)
+	yield(pickups_available.back(), "ready")
 	
 	var front_mount_files = files_in_directory(front_mount_path)
 	pool_objects(front_mount_files, front_mount_copies, front_mounts_available, FRONT_MOUNT)
@@ -97,10 +110,15 @@ func _ready():
 	#first_mount_spawn(20, BACK_MOUNT)
 	
 	
-	
+
 func _process(_delta):
-	pass
-		
+#	time += delta
+#	if time >= 4:
+#		place_pickup()
+#		time = 0
+	if Input.is_action_just_pressed("Jump") && first_jump == false:
+		first_jump = true
+		place_pickup()		
 
 func first_plateau_spawn():
 	for _i in range(1, 30):
@@ -112,6 +130,9 @@ func first_mount_spawn(x):
 		place_mountain(mid_mounts_available, mid_mounts_in_scene, avg_mid_mount_gap, mid_mount_vel, mid_y_offset)
 		place_mountain(back_mounts_available, back_mounts_in_scene, avg_back_mount_gap, back_mount_vel, back_y_offset)
 	
+func first_pickup_spawn():
+		place_pickup()
+
 func files_in_directory(path):
 	var files = []
 	var dir = Directory.new()
@@ -141,6 +162,9 @@ func pool_objects(files, num_copies, objs_available, obj_type):
 				PLATFORM:
 					if (object.connect("off_screen", self, "platform_off_screen") != OK):
 						print("Error connecting signal from platform nodes")
+				PICKUP:
+					if (object.connect("off_screen", self, "pickup_off_screen") != OK):
+						print("Error connecting signal from pickup nodes")
 				FRONT_MOUNT:
 					if (object.connect("off_screen", self, "front_mount_off_screen") != OK):
 						print("Error connecting signal from front_mount nodes")
@@ -177,6 +201,10 @@ func back_mount_off_screen(destroyed_obj):
 	move_to_pool(destroyed_obj, back_mounts_in_scene, back_mounts_available)
 	place_mountain(back_mounts_available, back_mounts_in_scene, avg_back_mount_gap, back_mount_vel, back_y_offset)
 
+func pickup_off_screen(destroyed_obj):
+	move_to_pool(destroyed_obj, pickups_in_scene, pickups_available)
+	place_pickup()
+
 ####
 ### object placement functions
 func place_plateau():
@@ -207,6 +235,18 @@ func place_platform(prev_obj, next_obj):
 	platform.global_position = platform_pos
 	platform.vel_multiplier = 1
 	platforms_in_scene.push_back(platform)
+
+
+func place_pickup():
+	print("Pickup placed")
+	var index_select = select_rand_index(pickups_available)
+	var object = pickups_available[index_select]
+	rng.randomize()
+	var y_position = rng.randf_range(y_range.x, y_range.y)
+	object.global_position = Vector2(pickup_default_x_pos, y_position)
+	object.vel_multiplier = 1
+	pickups_available.remove(index_select)
+	pickups_in_scene.push_back(object)
 
 ### placement helpers
 func get_random_gap(gap_size, gap_range):
@@ -242,8 +282,9 @@ func get_mountain_spawn_position(obj_to_spawn, objs_in_scene, gap_size, y_offset
 		var spawn_location = Vector2(dist_from_prev + previous_obj.global_position.x, y_offset)
 		return spawn_location
 
+
 ####
-### helper functions
+### misc helper functions
 func move_to_pool(destroyed_obj, objs_in_scene, objs_available):
 	destroyed_obj.vel_multiplier = 0
 	destroyed_obj.global_position = pool_position

@@ -1,12 +1,8 @@
 extends CanvasLayer
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 var score_label
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	score_label = get_node("TopBar/Spacer/Coins/Score")
 	score_label.text = str(0)

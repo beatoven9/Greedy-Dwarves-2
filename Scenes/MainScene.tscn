@@ -1,12 +1,8 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/Level_Motor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Player_Dwarf.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scenes/Pickups/Gem_Blue.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Starting_Platform.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Scenes/Pickups/Gem_Purple.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Scenes/Pickups/Coin_Small.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Scenes/Pickups/Coin_Large.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scenes/Game_Manager.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Assets/Mountain_Ground_temp.png" type="Texture" id=9]
 [ext_resource path="res://Assets/Plateau_Ground_Temp.png" type="Texture" id=10]
@@ -19,6 +15,7 @@ position = Vector2( 200, 150 )
 
 [node name="Level_Motor" parent="." instance=ExtResource( 1 )]
 avg_plateau_spawn_y = 300
+y_range = Vector2( 180, 250 )
 
 [node name="Mountain_Ground" type="Sprite" parent="Level_Motor"]
 position = Vector2( 300, 356.966 )
@@ -33,18 +30,6 @@ texture = ExtResource( 10 )
 
 [node name="Starting_Platform" parent="." instance=ExtResource( 4 )]
 position = Vector2( 200, 200 )
-
-[node name="Gem_Blue" parent="." instance=ExtResource( 3 )]
-position = Vector2( 195.86, 108.028 )
-
-[node name="Gem_Purple" parent="." instance=ExtResource( 5 )]
-position = Vector2( 208.366, 120.305 )
-
-[node name="Coin_Small" parent="." instance=ExtResource( 6 )]
-position = Vector2( 188.35, 95.2086 )
-
-[node name="Coin_Large" parent="." instance=ExtResource( 7 )]
-position = Vector2( 215.486, 97.5686 )
 
 [node name="Game_Manager" parent="." instance=ExtResource( 8 )]
 
