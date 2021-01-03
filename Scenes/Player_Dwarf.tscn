@@ -82,4 +82,11 @@ anims/Run = SubResource( 4 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2( 150, 0 )
+current = true
 zoom = Vector2( 0.5, 0.5 )
+process_mode = 0
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = true
+smoothing_speed = 10.0
+drag_margin_bottom = 0.0

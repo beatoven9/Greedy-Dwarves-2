@@ -4,7 +4,8 @@
 [ext_resource path="res://Scripts/Mountain.gd" type="Script" id=2]
 
 [node name="Fore_Mountain_B" type="Sprite"]
-z_index = -1
+position = Vector2( -0.0234118, 1.00667 )
+z_index = -2
 texture = ExtResource( 1 )
 centered = false
 offset = Vector2( -107.318, -176.052 )

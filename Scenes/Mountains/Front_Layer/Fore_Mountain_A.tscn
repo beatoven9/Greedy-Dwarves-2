@@ -5,7 +5,7 @@
 
 [node name="Fore_Mountain_A" type="Sprite"]
 scale = Vector2( 1.5, 1.5 )
-z_index = -1
+z_index = -2
 texture = ExtResource( 1 )
 centered = false
 offset = Vector2( -96.314, -174.927 )

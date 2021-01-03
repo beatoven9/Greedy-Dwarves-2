@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scenes/Level_Motor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Player_Dwarf.tscn" type="PackedScene" id=2]
@@ -8,31 +8,53 @@
 [ext_resource path="res://Scenes/Pickups/Coin_Small.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scenes/Pickups/Coin_Large.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scenes/Game_Manager.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Assets/Mountain_Ground_temp.png" type="Texture" id=9]
+[ext_resource path="res://Assets/Plateau_Ground_Temp.png" type="Texture" id=10]
+[ext_resource path="res://Scenes/Death_Trigger.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Scenes/GUI.tscn" type="PackedScene" id=12]
 
 [node name="MainScene" type="Node2D"]
 
 [node name="Player_Dwarf" parent="." instance=ExtResource( 2 )]
-position = Vector2( 0, -150 )
+position = Vector2( 200, 150 )
 
 [node name="Level_Motor" parent="." instance=ExtResource( 1 )]
-avg_plateau_spawn_y = 0
+avg_plateau_spawn_y = 300
 
-[node name="Platform" parent="." instance=ExtResource( 4 )]
-position = Vector2( 0, -100 )
+[node name="Mountain_Ground" type="Sprite" parent="Level_Motor"]
+position = Vector2( 300, 356.966 )
+scale = Vector2( 100, 8.86572 )
+z_index = -5
+texture = ExtResource( 9 )
+
+[node name="Plateau_Ground" type="Sprite" parent="Level_Motor"]
+position = Vector2( 300, 962.345 )
+scale = Vector2( 100, 67.7932 )
+texture = ExtResource( 10 )
+
+[node name="Starting_Platform" parent="." instance=ExtResource( 4 )]
+position = Vector2( 200, 200 )
 
 [node name="Gem_Blue" parent="." instance=ExtResource( 3 )]
-position = Vector2( -7.78696, -180.472 )
-value = 10
+position = Vector2( 195.86, 108.028 )
 
 [node name="Gem_Purple" parent="." instance=ExtResource( 5 )]
-position = Vector2( 4.71937, -168.195 )
+position = Vector2( 208.366, 120.305 )
 
 [node name="Coin_Small" parent="." instance=ExtResource( 6 )]
-position = Vector2( -15.2971, -193.291 )
-value = 5
+position = Vector2( 188.35, 95.2086 )
 
 [node name="Coin_Large" parent="." instance=ExtResource( 7 )]
-position = Vector2( 11.8393, -190.931 )
-value = 30
+position = Vector2( 215.486, 97.5686 )
 
 [node name="Game_Manager" parent="." instance=ExtResource( 8 )]
+
+[node name="Death_Trigger" parent="." instance=ExtResource( 11 )]
+position = Vector2( 0, 300 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
+[node name="GUI" parent="CanvasLayer" instance=ExtResource( 12 )]
+anchor_right = 1.0
+margin_right = 0.0

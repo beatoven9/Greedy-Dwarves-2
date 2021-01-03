@@ -14,7 +14,7 @@ var plateaus_available: Array = []
 var plateaus_in_scene: Array = []
 export var avg_plateau_gap_size = 150
 export var plateau_gap_range = 70
-export var avg_plateau_spawn_y = 0
+export var avg_plateau_spawn_y = 300
 export var plateau_y_range = 50
 export var max_gap_without_platform = 150
 var plateau_copies = 10
@@ -29,26 +29,29 @@ var front_mounts_available: Array = []
 var front_mounts_in_scene: Array = []
 var front_mount_copies = 15
 var avg_front_mount_gap = 400
+var front_y_offset = 400
 
 	## MID_MOUNTAINS
 var mid_mounts_available: Array = []
 var mid_mounts_in_scene: Array = []
 var mid_mount_copies = 15
 var avg_mid_mount_gap = 500
+var mid_y_offset = 350
 
 	## BACK_MOUNTAINS
 var back_mounts_available: Array = []
 var back_mounts_in_scene: Array = []
 var back_mount_copies = 15
 var avg_back_mount_gap = 600
+var back_y_offset = 300
 
 	## general mountain stuff
-var default_mountain_spawn_position = Vector2(0, 100)
+var default_mountain_spawn_position = Vector2(0, 400)
 var mountain_gap_range = 300
 
 	## general pool stuff
 var pool_position = Vector2(2000, 2000)
-var default_spawn_position = Vector2(1000, 0)
+var default_spawn_position = Vector2(0, 300)
 
 
 #var horizontal_velocity: int
@@ -89,9 +92,9 @@ func _ready():
 	pool_objects(back_mount_files, back_mount_copies, back_mounts_available, BACK_MOUNT)	
 	yield(back_mounts_available.back(), "ready")
 	
-	first_mount_spawn(20, FRONT_MOUNT)
-	first_mount_spawn(20, MID_MOUNT)
-	first_mount_spawn(20, BACK_MOUNT)
+	first_mount_spawn(20)
+	#first_mount_spawn(20, MID_MOUNT)
+	#first_mount_spawn(20, BACK_MOUNT)
 	
 	
 	
@@ -103,9 +106,11 @@ func first_plateau_spawn():
 	for _i in range(1, 30):
 		place_plateau()
 	
-func first_mount_spawn(x, type):
+func first_mount_spawn(x):
 	for _i in range(1, x):
-		place_mountain(type)
+		place_mountain(front_mounts_available, front_mounts_in_scene, avg_front_mount_gap, front_mount_vel, front_y_offset)
+		place_mountain(mid_mounts_available, mid_mounts_in_scene, avg_mid_mount_gap, mid_mount_vel, mid_y_offset)
+		place_mountain(back_mounts_available, back_mounts_in_scene, avg_back_mount_gap, back_mount_vel, back_y_offset)
 	
 func files_in_directory(path):
 	var files = []
@@ -162,16 +167,15 @@ func platform_off_screen(destroyed_obj):
 
 func front_mount_off_screen(destroyed_obj):
 	move_to_pool(destroyed_obj, front_mounts_in_scene, front_mounts_available)
-	place_mountain(FRONT_MOUNT)
+	place_mountain(front_mounts_available, front_mounts_in_scene, avg_front_mount_gap, front_mount_vel, front_y_offset)
 
 func mid_mount_off_screen(destroyed_obj):
 	move_to_pool(destroyed_obj, mid_mounts_in_scene, mid_mounts_available)
-	place_mountain(MID_MOUNT)
+	place_mountain(mid_mounts_available, mid_mounts_in_scene, avg_mid_mount_gap, mid_mount_vel, mid_y_offset)
 	
 func back_mount_off_screen(destroyed_obj):
 	move_to_pool(destroyed_obj, back_mounts_in_scene, back_mounts_available)
-	place_mountain(BACK_MOUNT)
-
+	place_mountain(back_mounts_available, back_mounts_in_scene, avg_back_mount_gap, back_mount_vel, back_y_offset)
 
 ####
 ### object placement functions
@@ -185,36 +189,16 @@ func place_plateau():
 	plateaus_in_scene.append(object)
 
 	
-func place_mountain(mountain_type):
+func place_mountain(objs_available, objs_in_scene, avg_gap, obj_vel, y_offset):
 	var object
 	var spawn_position
-	match mountain_type:
-		FRONT_MOUNT:
-			var index_select = select_rand_index(front_mounts_available)
-			object = front_mounts_available[index_select]
-			spawn_position = get_mountain_spawn_position(object, front_mounts_in_scene, avg_front_mount_gap)
-			front_mounts_available.remove(index_select)
-			front_mounts_in_scene.append(object)
-			object.vel_multiplier = NORMAL_SPEED * front_mount_vel
-		MID_MOUNT:
-			var index_select = select_rand_index(mid_mounts_available)
-			object = mid_mounts_available[index_select]
-			spawn_position = get_mountain_spawn_position(object, mid_mounts_in_scene, avg_mid_mount_gap)
-			mid_mounts_available.remove(index_select)
-			mid_mounts_in_scene.append(object)
-			object.vel_multiplier = NORMAL_SPEED * mid_mount_vel
-		BACK_MOUNT:
-			var index_select = select_rand_index(back_mounts_available)
-			object = back_mounts_available[index_select]
-			spawn_position = get_mountain_spawn_position(object, back_mounts_in_scene, avg_back_mount_gap)
-			back_mounts_available.remove(index_select)
-			back_mounts_in_scene.append(object)
-			object.vel_multiplier = NORMAL_SPEED * back_mount_vel
-		_:
-			print("an invalid obj is being placed as a mountain")
+	var index_select = select_rand_index(objs_available)
+	object = objs_available[index_select]
+	spawn_position = get_mountain_spawn_position(object, objs_in_scene, avg_gap, y_offset)
+	objs_available.remove(index_select)
+	objs_in_scene.append(object)
+	object.vel_multiplier = NORMAL_SPEED * obj_vel
 	object.global_position = spawn_position
-	
-	
 
 
 func place_platform(prev_obj, next_obj):
@@ -249,13 +233,13 @@ func get_plateau_spawn_position(obj_to_spawn, gap_size):
 			place_platform(inner_corner_previous, inner_corner_current) 
 		return spawn_location
 		
-func get_mountain_spawn_position(obj_to_spawn, objs_in_scene, gap_size):
+func get_mountain_spawn_position(obj_to_spawn, objs_in_scene, gap_size, y_offset):
 	if objs_in_scene.size() <= 0:
-		return default_mountain_spawn_position
+		return Vector2(default_mountain_spawn_position.x, y_offset)
 	else:
 		var previous_obj = objs_in_scene.back()
 		var dist_from_prev = (obj_to_spawn.halfwidth) + (previous_obj.halfwidth) + get_random_gap(gap_size, mountain_gap_range)
-		var spawn_location = Vector2(dist_from_prev + previous_obj.global_position.x, default_mountain_spawn_position.y)
+		var spawn_location = Vector2(dist_from_prev + previous_obj.global_position.x, y_offset)
 		return spawn_location
 
 ####

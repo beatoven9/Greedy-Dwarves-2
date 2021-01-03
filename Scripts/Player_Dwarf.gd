@@ -12,7 +12,7 @@ var velocity = Vector2()
 export var gravity = 8
 
 func _ready():
-	$Camera2D.make_current()
+	#$Camera2D.make_current()
 	lock_position = position.x
 
 func _physics_process(_delta):

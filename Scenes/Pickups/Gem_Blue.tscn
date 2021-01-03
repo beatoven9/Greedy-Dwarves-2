@@ -25,6 +25,7 @@ extents = Vector2( 5.09871, 6.02349 )
 
 [node name="Gem_Blue" type="Area2D"]
 script = ExtResource( 2 )
+value = 10
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
@@ -36,4 +37,3 @@ anims/Pickup_Idle = SubResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
-[connection signal="body_entered" from="." to="." method="_on_player_body_entered"]
