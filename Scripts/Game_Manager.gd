@@ -10,6 +10,7 @@ func _ready():
 
 func pickup(value):
 	score += value
+	print("Score increased by: ", value)
 	emit_signal("update_score_display", score)
 
 func update_score_display():
